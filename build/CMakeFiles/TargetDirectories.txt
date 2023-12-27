@@ -1,0 +1,3 @@
+/home/vuk/Documents/Programming/C++/Learning/build/CMakeFiles/main.dir
+/home/vuk/Documents/Programming/C++/Learning/build/CMakeFiles/edit_cache.dir
+/home/vuk/Documents/Programming/C++/Learning/build/CMakeFiles/rebuild_cache.dir
