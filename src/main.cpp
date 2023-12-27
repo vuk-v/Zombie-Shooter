@@ -18,7 +18,7 @@ int main () {
     SDL_Color black = {255, 0, 0};
     SDL_Color white = {0, 150, 0};
 
-    TTF_Font* font = TTF_OpenFont("/home/vuk/Documents/Programming/C++/Learning/res/font/data-latin.ttf", 50);
+    TTF_Font* font = TTF_OpenFont("../res/font/data-latin.ttf", 50);
 
     Text intro_text (
         TTF_RenderText_Solid(font, "Zombies!", white),
@@ -33,7 +33,7 @@ int main () {
     );
 
     Entity start_background (
-        "/home/vuk/Documents/Programming/C++/Learning/res/img/screen_background.png",
+        "../res/img/screen_background.png",
         {0, 0, 500, 500},
         window.renderer,
         "",
@@ -41,7 +41,7 @@ int main () {
     );
 
     Entity start_button (
-        "/home/vuk/Documents/Programming/C++/Learning/res/img/start/start_button.png",
+        "../res/img/start/start_button.png",
         {100, 200, 300, 100},
         window.renderer,
         "",
@@ -49,7 +49,7 @@ int main () {
     );
 
     Entity restart_button (
-        "/home/vuk/Documents/Programming/C++/Learning/res/img/end/restart_button.png",
+        "../res/img/end/restart_button.png",
         {100, 200, 300, 100},
         window.renderer,
         "",
@@ -57,7 +57,7 @@ int main () {
     );
 
     Entity background (
-        "/home/vuk/Documents/Programming/C++/Learning/res/img/background.png",
+        "../res/img/background.png",
         {0, 0, 500, 500},
         window.renderer,
         "",
@@ -65,7 +65,7 @@ int main () {
     );
 
     Entity character (
-        "/home/vuk/Documents/Programming/C++/Learning/res/img/character/w.png",
+        "../res/img/character/w.png",
         {218, 400, 64, 64},
         window.renderer,
         "",
@@ -74,7 +74,7 @@ int main () {
 
     for (int i = 0; i < 3; i++) {
         hearts.push_back(Entity (
-            "/home/vuk/Documents/Programming/C++/Learning/res/img/hearts/heart.png",
+            "../res/img/hearts/heart.png",
             {i * 32 + 2, 0 + 2, 32, 32},
             window.renderer,
             "",
@@ -132,7 +132,7 @@ int main () {
 
                             for (int i = 0; i < 3; i++) {
                                 hearts.push_back(Entity (
-                                    "/home/vuk/Documents/Programming/C++/Learning/res/img/hearts/heart.png",
+                                    "../res/img/hearts/heart.png",
                                     {i * 32 + 2, 0 + 2, 32, 32},
                                     window.renderer,
                                     "",
@@ -171,7 +171,7 @@ int main () {
 
                             case SDLK_h:
                                 bullets.push_back(Entity (
-                                    "/home/vuk/Documents/Programming/C++/Learning/res/img/bullet.png",
+                                    "../res/img/bullet.png",
                                     {character.pos_size.x, character.pos_size.y, 20, 20},
                                     window.renderer,
                                     direction,
@@ -207,7 +207,7 @@ int main () {
             if (gen) {
                 if (number == rand() % 100 + 1) {
                     zombies.push_back(Entity (
-                        "/home/vuk/Documents/Programming/C++/Learning/res/img/zombie/north.png",
+                        "../res/img/zombie/north.png",
                         {rand() % 400 + 1, 60, 64, 64},
                         window.renderer,
                         "",
@@ -216,7 +216,7 @@ int main () {
                 }
             }
 
-            character.Update(std::format("/home/vuk/Documents/Programming/C++/Learning/res/img/character/{}.png", direction).c_str(), window.renderer);
+            character.Update(std::format("../res/img/character/{}.png", direction).c_str(), window.renderer);
 
             window.Copy(background.texture, background.pos_size);
             window.Copy(character.texture, character.pos_size);
@@ -261,7 +261,7 @@ int main () {
                         }
                     }
 
-                    zombies.at(i).Update("/home/vuk/Documents/Programming/C++/Learning/res/img/zombie/north.png", window.renderer);
+                    zombies.at(i).Update("../res/img/zombie/north.png", window.renderer);
                     window.Copy(zombies.at(i).texture, zombies.at(i).pos_size);
 
                     zombies.at(i).pos_size.y += 1;
@@ -294,7 +294,7 @@ int main () {
                         continue;
                     }
 
-                    bullets.at(i).Update("/home/vuk/Documents/Programming/C++/Learning/res/img/bullet.png", window.renderer);
+                    bullets.at(i).Update("../res/img/bullet.png", window.renderer);
                     window.Copy(bullets.at(i).texture, bullets.at(i).pos_size);
 
                     if (bullets.at(i).original_direction == "w") {
@@ -311,7 +311,7 @@ int main () {
 
             if (hearts.size() != 0) {
                 for (int i = 0; i < hearts.size(); i++) {
-                    hearts.at(i).Update(std::format("/home/vuk/Documents/Programming/C++/Learning/res/img/hearts/{}.png", hearts.at(i).heart_state).c_str(), window.renderer);
+                    hearts.at(i).Update(std::format("../res/img/hearts/{}.png", hearts.at(i).heart_state).c_str(), window.renderer);
                     window.Copy(hearts.at(i).texture, hearts.at(i).pos_size);
                 }
             }
