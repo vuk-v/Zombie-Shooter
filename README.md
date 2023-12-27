@@ -11,7 +11,7 @@
   - Use **W-A-S-D** to move
   - Use **h** to shoot
 
-  ## Requirements
+  ## Requirements 📋
   - ***SDL2, SDL2_image, SDL2_ttf***
   - ***CMake***
   - ***C++20***
