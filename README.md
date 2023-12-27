@@ -14,4 +14,4 @@
   ## Requirements
   - ***SDL2, SDL2_image, SDL2_ttf***
   - ***CMake***
-  - ***C++***
+  - ***C++20***
