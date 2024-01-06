@@ -5,7 +5,7 @@
   
   ## Goal 🎯
   Don't let the zombies hit you or get to the other side,\
-  otherwise you will loose one of your 3 hearts.
+  otherwise you will loose one of your 3 hearts.\
   From time to time there will be a stronger zombie spawning,\
   moving in unexpected ways! Watch out!
       
