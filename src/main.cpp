@@ -94,6 +94,7 @@ int main () {
 
     bool quit = false;
     bool gen = false;
+    bool boss = true;
 
     bool start_screen = true;
     bool game = false;
@@ -214,6 +215,18 @@ int main () {
                         ""
                     ));
                 }
+
+                if (int_zombies_killed % 20 == 0) {// && int_zombies_killed != 0) {
+                    for (static bool f = true; f; f = false) {
+                        zombies.push_back(Entity (
+                            "../res/img/zombie/north_boss.png",
+                            {122, 60, 128, 85},
+                            window.renderer,
+                            "a",
+                            "b"
+                        ));
+                    }
+                }
             }
 
             character.Update(std::format("../res/img/character/{}.png", direction).c_str(), window.renderer);
@@ -261,8 +274,25 @@ int main () {
                         }
                     }
 
-                    zombies.at(i).Update("../res/img/zombie/north.png", window.renderer);
-                    window.Copy(zombies.at(i).texture, zombies.at(i).pos_size);
+                    if (zombies.at(i).original_direction == "") {
+                        zombies.at(i).Update("../res/img/zombie/north.png", window.renderer);
+                        window.Copy(zombies.at(i).texture, zombies.at(i).pos_size);
+                    } else if (zombies.at(i).heart_state == "b") {
+                        zombies.at(i).Update("../res/img/zombie/north_boss.png", window.renderer);
+                        window.Copy(zombies.at(i).texture, zombies.at(i).pos_size);
+
+                        if (zombies.at(i).pos_size.x >= 372) {
+                            zombies.at(i).original_direction = "a";
+                        } else if (zombies.at(i).pos_size.x <= 0) {
+                            zombies.at(i).original_direction = "d";
+                        }
+
+                        if (zombies.at(i).original_direction == "d") {
+                            zombies.at(i).pos_size.x += 2;
+                        } else {
+                            zombies.at(i).pos_size.x -= 2;
+                        }
+                    }
 
                     zombies.at(i).pos_size.y += 1;
                 }
