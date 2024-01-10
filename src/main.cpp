@@ -205,6 +205,8 @@ int main () {
         }
 
         if (game) {
+            int rand_direction;
+
             if (gen) {
                 if (number == rand() % 100 + 1) {
                     zombies.push_back(Entity (
@@ -228,13 +230,25 @@ int main () {
                     }
 
                     if (!boss) {
-                        zombies.push_back(Entity (
-                            "../res/img/zombie/north_boss.png",
-                            {122, 60, 128, 85},
-                            window.renderer,
-                            Left,
-                            Boss
-                        ));
+                        rand_direction = rand() % 10 + 1;
+
+                        if (rand_direction <= 5) {
+                            zombies.push_back(Entity (
+                                "../res/img/zombie/north_boss.png",
+                                {122, 60, 128, 85},
+                                window.renderer,
+                                Left,
+                                Boss
+                            ));
+                        } else {
+                            zombies.push_back(Entity (
+                                "../res/img/zombie/north_boss.png",
+                                {122, 60, 128, 85},
+                                window.renderer,
+                                Right,
+                                Boss
+                            ));
+                        }
                     }
                 }
             }
