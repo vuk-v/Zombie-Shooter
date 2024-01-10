@@ -36,40 +36,40 @@ int main () {
         "../res/img/screen_background.png",
         {0, 0, 500, 500},
         window.renderer,
-        "",
-        ""
+        NO_DIRECTION_NEEDED,
+        NO_STATE_NEEDED
     );
 
     Entity start_button (
         "../res/img/start/start_button.png",
         {100, 200, 300, 100},
         window.renderer,
-        "",
-        ""
+        NO_DIRECTION_NEEDED,
+        NO_STATE_NEEDED
     );
 
     Entity restart_button (
         "../res/img/end/restart_button.png",
         {100, 200, 300, 100},
         window.renderer,
-        "",
-        ""
+        NO_DIRECTION_NEEDED,
+        NO_STATE_NEEDED
     );
 
     Entity background (
         "../res/img/background.png",
         {0, 0, 500, 500},
         window.renderer,
-        "",
-        ""
+        NO_DIRECTION_NEEDED,
+        NO_STATE_NEEDED
     );
 
     Entity character (
         "../res/img/character/w.png",
         {218, 400, 64, 64},
         window.renderer,
-        "",
-        ""
+        NO_DIRECTION_NEEDED,
+        NO_STATE_NEEDED
     );
 
     for (int i = 0; i < 3; i++) {
@@ -77,8 +77,8 @@ int main () {
             "../res/img/hearts/heart.png",
             {i * 32 + 2, 0 + 2, 32, 32},
             window.renderer,
-            "",
-            "heart"
+            NO_DIRECTION_NEEDED,
+            Heart
         ));
     }
 
@@ -88,13 +88,13 @@ int main () {
     srand(time(NULL));
     int number = rand() % 10 + 1;
 
-    std::string direction = "w";
+    Direction direction = Forward;
 
     SDL_Event event;
 
     bool quit = false;
     bool gen = false;
-    bool boss = true;
+    bool boss = false;
 
     bool start_screen = true;
     bool game = false;
@@ -123,7 +123,7 @@ int main () {
 
                         if (x_mouse > 100 && x_mouse < 400 && y_mouse > 200 && y_mouse < 300) {
                             int_zombies_killed = 0;
-                            direction = "w";
+                            direction = Forward;
                             
                             hearts.clear();
                             zombies.clear();
@@ -136,8 +136,8 @@ int main () {
                                     "../res/img/hearts/heart.png",
                                     {i * 32 + 2, 0 + 2, 32, 32},
                                     window.renderer,
-                                    "",
-                                    "heart"
+                                    NO_DIRECTION_NEEDED,
+                                    Heart
                                 ));
                             }
 
@@ -152,22 +152,22 @@ int main () {
                         switch (event.key.keysym.sym) {
                             case SDLK_w:
                                 character.pos_size.y -= 5;
-                                direction = "w";
+                                direction = Forward;
                                 break;
 
                             case SDLK_a:
                                 character.pos_size.x -= 5;
-                                direction = "a";
+                                direction = Left;
                                 break;
 
                             case SDLK_s:
                                 character.pos_size.y += 5;
-                                direction = "s";
+                                direction = Backward;
                                 break;
 
                             case SDLK_d:
                                 character.pos_size.x += 5;
-                                direction = "d";
+                                direction = Right;
                                 break;
 
                             case SDLK_h:
@@ -176,16 +176,16 @@ int main () {
                                     {character.pos_size.x, character.pos_size.y, 20, 20},
                                     window.renderer,
                                     direction,
-                                    ""
+                                    NO_STATE_NEEDED
                                 ));
 
-                                if (direction == "w") {
+                                if (direction == Forward) {
                                     character.pos_size.y += 5;
-                                } else if (direction == "a") {
+                                } else if (direction == Left) {
                                     character.pos_size.x += 5;
-                                } else if (direction == "s") {
+                                } else if (direction == Backward) {
                                     character.pos_size.y -= 5;
-                                } else if (direction == "d") {
+                                } else if (direction == Right) {
                                     character.pos_size.x -= 5;
                                 }
 
@@ -211,25 +211,35 @@ int main () {
                         "../res/img/zombie/north.png",
                         {rand() % 400 + 1, 60, 64, 64},
                         window.renderer,
-                        "",
-                        ""
+                        NO_DIRECTION_NEEDED,
+                        NO_STATE_NEEDED
                     ));
                 }
 
-                if (int_zombies_killed % 20 == 0) {// && int_zombies_killed != 0) {
-                    for (static bool f = true; f; f = false) {
+                if (int_zombies_killed % 20 == 0 && int_zombies_killed != 0) {
+                    if (zombies.size() != 0) {
+                        for (int i = 0; i < zombies.size() - 1; i++) {
+                            if (zombies.at(i).state == Boss) {
+                                boss = true;
+                            } else {
+                                boss = false;
+                            }
+                        }
+                    }
+
+                    if (!boss) {
                         zombies.push_back(Entity (
                             "../res/img/zombie/north_boss.png",
                             {122, 60, 128, 85},
                             window.renderer,
-                            "a",
-                            "b"
+                            Left,
+                            Boss
                         ));
                     }
                 }
             }
 
-            character.Update(std::format("../res/img/character/{}.png", direction).c_str(), window.renderer);
+            character.Update(std::format("../res/img/character/{}.png", DirectionValue(direction)).c_str(), window.renderer);
 
             window.Copy(background.texture, background.pos_size);
             window.Copy(character.texture, character.pos_size);
@@ -241,10 +251,10 @@ int main () {
                         zombies.erase(zombies.begin() + i);
 
                         for (int i = hearts.size() - 1; i >= 0; i--) {
-                            if (hearts.at(i).heart_state == "heart") {
-                                hearts.at(i).heart_state = "heart_loss";
+                            if (hearts.at(i).state == Heart) {
+                                hearts.at(i).state = Heart_Loss;
 
-                                if (i == 0 && hearts.at(i).heart_state == "heart_loss") {
+                                if (i == 0 && hearts.at(i).state == Heart_Loss) {
                                     end_screen = true;
                                     game = false;
                                     gen = false;
@@ -274,20 +284,20 @@ int main () {
                         }
                     }
 
-                    if (zombies.at(i).original_direction == "") {
+                    if (zombies.at(i).original_direction == NO_DIRECTION_NEEDED) {
                         zombies.at(i).Update("../res/img/zombie/north.png", window.renderer);
                         window.Copy(zombies.at(i).texture, zombies.at(i).pos_size);
-                    } else if (zombies.at(i).heart_state == "b") {
+                    } else if (zombies.at(i).state == Boss) {
                         zombies.at(i).Update("../res/img/zombie/north_boss.png", window.renderer);
                         window.Copy(zombies.at(i).texture, zombies.at(i).pos_size);
 
                         if (zombies.at(i).pos_size.x >= 372) {
-                            zombies.at(i).original_direction = "a";
+                            zombies.at(i).original_direction = Left;
                         } else if (zombies.at(i).pos_size.x <= 0) {
-                            zombies.at(i).original_direction = "d";
+                            zombies.at(i).original_direction = Right;
                         }
 
-                        if (zombies.at(i).original_direction == "d") {
+                        if (zombies.at(i).original_direction == Right) {
                             zombies.at(i).pos_size.x += 2;
                         } else {
                             zombies.at(i).pos_size.x -= 2;
@@ -327,21 +337,29 @@ int main () {
                     bullets.at(i).Update("../res/img/bullet.png", window.renderer);
                     window.Copy(bullets.at(i).texture, bullets.at(i).pos_size);
 
-                    if (bullets.at(i).original_direction == "w") {
+                    if (bullets.at(i).original_direction == Forward) {
                         bullets.at(i).pos_size.y -= 15;
-                    } else if (bullets.at(i).original_direction == "a") {
+                    } else if (bullets.at(i).original_direction == Left) {
                         bullets.at(i).pos_size.x -= 15;
-                    } else if (bullets.at(i).original_direction == "s") {
+                    } else if (bullets.at(i).original_direction == Backward) {
                         bullets.at(i).pos_size.y += 15;
-                    } else if (bullets.at(i).original_direction == "d") {
+                    } else if (bullets.at(i).original_direction == Right) {
                         bullets.at(i).pos_size.x += 15;
                     }
                 }
             }
 
+            std::string temp;
+
             if (hearts.size() != 0) {
                 for (int i = 0; i < hearts.size(); i++) {
-                    hearts.at(i).Update(std::format("../res/img/hearts/{}.png", hearts.at(i).heart_state).c_str(), window.renderer);
+                    if (StateValue(hearts.at(i).state) == 'h') {
+                        temp = "heart";
+                    } else if (StateValue(hearts.at(i).state) == 'l') {
+                        temp = "heart_loss";
+                    }
+
+                    hearts.at(i).Update(std::format("../res/img/hearts/{}.png", temp).c_str(), window.renderer);
                     window.Copy(hearts.at(i).texture, hearts.at(i).pos_size);
                 }
             }
